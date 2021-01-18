@@ -4,24 +4,40 @@ from bs4 import BeautifulSoup
 from collections import namedtuple
 from urllib import request
 
-
-def enum(name, **elements):
-    """Create a new enumerable."""
-    meta = namedtuple(name, elements.keys())
-    return meta(**elements)
+import unicodedata
 
 
-ELEMENT_CLASSES = enum(
-    'elements',
-    INGREDIENTS='recipe-ingredients',
-    PREPERATION='recipe-steps',
-    TIME_YIELD='recipe-yield-value',
-    TITLE='recipe-title'
-)
+# --- HELPERS --- #
+def is_numeric(val: str):
+    """Check if value is a number."""
+    try:
+        float(val)
+        return True
+    except ValueError:
+        pass
+
+    try:
+        unicodedata.numeric(val)
+        return True
+    except (TypeError, ValueError):
+        pass
+
+    return False
+
+
+ELEMENT_CLASSES_DICT = {
+    'INGREDIENTS': 'recipe-ingredients',
+    'PREPERATION': 'recipe-steps',
+    'TIME_YIELD': 'recipe-yield-value',
+    'TITLE': 'recipe-title'
+}
+ELELMENT_TUPLE = namedtuple('elements', ELEMENT_CLASSES_DICT.keys())
+ELEMENT_CLASSES = ELELMENT_TUPLE(**ELEMENT_CLASSES_DICT)
 
 LINE_BREAK = '\n'
 
 
+# --- CLASS --- #
 class RecipeScraper():
     """NYT recipe scraper class."""
 
@@ -66,7 +82,7 @@ class RecipeScraper():
         for ingredient in clean_ingredients:
             line = f' {ingredient}'
 
-            if ingredient.isdigit():
+            if is_numeric(ingredient):
                 line = f'{LINE_BREAK} {ingredient}' if len(ingredients) else ingredient
 
             ingredients += line
