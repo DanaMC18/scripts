@@ -27,5 +27,5 @@ recipe_scraper.scrape()
 The scraper can be run directly in the command-line be providing a valid url.
 
 ```bash
-$ python recipe_scraper.py https://cooking.nytimes.com/recipes/some-recipe
+$ python run_parser.py https://cooking.nytimes.com/recipes/some-recipe
 ```
