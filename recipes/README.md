@@ -1,6 +1,8 @@
 # NYT Recipe Scraper
 Built using python 3 and [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/).
 
+**Install dependencies:** `pip install -r requirements.txt`
+
 ## RecipeScraper
 Class that expects a NYT recipe url and parses the page source, and returns a recipe.
 
