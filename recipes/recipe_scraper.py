@@ -29,7 +29,9 @@ class RecipeScraper():
 
     def __init__(self, url: str):
         """Init recipe scraper."""
-        self.page_source = self._get_page_source(url)
+        base_url = url.split('?')[0]
+        self.page_source = self._get_page_source(base_url)
+        self._validate()
 
     def scrape(self):
         """Build recipe."""
@@ -82,3 +84,11 @@ class RecipeScraper():
         """Find recipe title from source."""
         title = self.page_source.find('h1', class_=ELEMENT_CLASSES.TITLE)
         return title.get_text().strip().upper()
+
+    def _validate(self):
+        """Validate page_source has valid class elements."""
+        for klass in ELEMENT_CLASSES:
+            if not self.page_source.find(class_=klass):
+                print(f'INVALID SOURCE: {klass} NOT FOUND')
+                return False
+        return True
