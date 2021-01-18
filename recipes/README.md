@@ -14,10 +14,13 @@ recipe_scraper.scrape()
 
 ```bash
 >>>
-'Name of Recipe'
+
+'NAME OF RECIPE'
  '# servings, # minutes or hours'
+
  'INGREDIENTS'
  ' quantity  ingredient'
+
  'PREPERATION'
  ' Cook the food.'
 ```

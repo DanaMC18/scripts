@@ -44,7 +44,7 @@ class RecipeScraper():
         time_servings = self._time_yield()
         title = self._title()
 
-        recipe = [title, time_servings, ingredients, prep]
+        recipe = [LINE_BREAK, title, time_servings, ingredients, prep, LINE_BREAK]
         for r in recipe:
             print(r)
         return recipe
@@ -57,36 +57,36 @@ class RecipeScraper():
 
     def _ingredients(self):
         """Find, parse, and format ingredients from source."""
-        ingredients_ul = self.page_source.find('ul', class_=ELEMENT_CLASSES.INGREDIENTS)
+        ingredients_ul = self.page_source.find(class_=ELEMENT_CLASSES.INGREDIENTS)
         raw_ingredients = ingredients_ul.get_text().strip().split(LINE_BREAK)
         clean_ingredients = [ri.strip() for ri in raw_ingredients if ri]
 
-        ingredients = f'INGREDIENTS {LINE_BREAK}'
+        ingredients = str()
 
         for ingredient in clean_ingredients:
             line = f' {ingredient}'
 
             if ingredient.isdigit():
-                line = f'{LINE_BREAK} {ingredient}'
+                line = f'{LINE_BREAK} {ingredient}' if len(ingredients) else ingredient
 
             ingredients += line
 
-        return ingredients.strip()
+        return f'{LINE_BREAK} INGREDIENTS {LINE_BREAK} {ingredients.strip()}'
 
     def _preperation(self):
         """Find, parse, and format recipe preperation from source."""
-        steps_ol = self.page_source.find('ol', class_=ELEMENT_CLASSES.PREPERATION)
-        return f'PREPERATION {LINE_BREAK} {steps_ol.get_text().strip()}'
+        steps_ol = self.page_source.find(class_=ELEMENT_CLASSES.PREPERATION)
+        return f'{LINE_BREAK} PREPERATION {LINE_BREAK} {steps_ol.get_text().strip()}'
 
     def _time_yield(self):
         """Find serving size and recipe time from source."""
-        spans = self.page_source.find_all('span', class_=ELEMENT_CLASSES.TIME_YIELD)
-        values = [span.get_text() for span in spans]
+        spans = self.page_source.find_all(class_=ELEMENT_CLASSES.TIME_YIELD)
+        values = [span.get_text().strip() for span in spans]
         return ', '.join(values)
 
     def _title(self):
         """Find recipe title from source."""
-        title = self.page_source.find('h1', class_=ELEMENT_CLASSES.TITLE)
+        title = self.page_source.find(class_=ELEMENT_CLASSES.TITLE)
         return title.get_text().strip().upper()
 
     def _validate(self):
