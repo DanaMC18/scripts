@@ -25,16 +25,20 @@ LINE_BREAK = '\n'
 class RecipeScraper():
     """NYT recipe scraper class."""
 
+    is_valid = True
     page_source = None
 
     def __init__(self, url: str):
         """Init recipe scraper."""
         base_url = url.split('?')[0]
         self.page_source = self._get_page_source(base_url)
-        self._validate()
+        self.is_valid = self._validate()
 
     def scrape(self):
         """Build recipe."""
+        if not self.is_valid:
+            return
+
         ingredients = self._ingredients()
         prep = self._preperation()
         time_servings = self._time_yield()
