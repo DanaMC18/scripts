@@ -4,26 +4,6 @@ from bs4 import BeautifulSoup
 from collections import namedtuple
 from urllib import request
 
-import unicodedata
-
-
-# --- HELPERS --- #
-def is_numeric(val: str):
-    """Check if value is a number."""
-    try:
-        float(val)
-        return True
-    except ValueError:
-        pass
-
-    try:
-        unicodedata.numeric(val)
-        return True
-    except (TypeError, ValueError):
-        pass
-
-    return False
-
 
 ELEMENT_CLASSES_DICT = {
     'INGREDIENTS': 'recipe-ingredients',
@@ -31,13 +11,13 @@ ELEMENT_CLASSES_DICT = {
     'TIME_YIELD': 'recipe-yield-value',
     'TITLE': 'recipe-title'
 }
+
 ELEMENT_TUPLE = namedtuple('elements', ELEMENT_CLASSES_DICT.keys())
 ELEMENT_CLASSES = ELEMENT_TUPLE(**ELEMENT_CLASSES_DICT)
 
 LINE_BREAK = '\n'
 
 
-# --- CLASS --- #
 class RecipeScraper():
     """NYT recipe scraper class."""
 
@@ -74,16 +54,16 @@ class RecipeScraper():
     def _ingredients(self):
         """Find, parse, and format ingredients from source."""
         ingredients_ul = self.page_source.find(class_=ELEMENT_CLASSES.INGREDIENTS)
-        raw_ingredients = ingredients_ul.get_text().strip().split(LINE_BREAK)
-        clean_ingredients = [ri.strip() for ri in raw_ingredients if ri]
-
+        items = ingredients_ul.find_all('span')
         ingredients = str()
 
-        for ingredient in clean_ingredients:
-            line = f' {ingredient}'
+        for ingredient in items:
+            index = items.index(ingredient)
+            text = ingredient.get_text().strip()
+            line = f' {text}'
 
-            if is_numeric(ingredient):
-                line = f'{LINE_BREAK} {ingredient}' if len(ingredients) else ingredient
+            if index == 0 or index % 2 == 0:
+                line = f'{LINE_BREAK} {text}'
 
             ingredients += line
 
