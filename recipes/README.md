@@ -3,8 +3,11 @@ Built using python 3 and [BeautifulSoup](https://www.crummy.com/software/Beautif
 
 **Install dependencies:** `pip install -r requirements.txt`
 
+
 ## RecipeScraper
-Class that expects a NYT recipe url and parses the page source, and returns a recipe.
+Class that expects a NYT recipe URL. It parses the page source of the URL and returns a formatted recipe.
+It can also be run in this [repl.it](https://repl.it/@DanaMC18/nyt-recipes#main.py).
+
 
 ### Usage
 ```python
@@ -27,7 +30,7 @@ recipe_scraper.scrape()
 
 
 ## CLI
-The scraper can be run directly in the command-line be providing a valid url.
+The scraper can be run directly in the command-line by providing a valid url.
 
 ```bash
 $ python run_parser.py https://cooking.nytimes.com/recipes/some-recipe
